@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node{
+    int idNum;
+    struct node * prevNode;
+    struct node * nextNode;
+};
+
+void basaEkle(struct node *newNode);
+void sonaEkle(struct node *newNode);
+void arayaEkle(struct node *newNode);
+void kisiEkle();
+void islemeAl();
+void listeyiGoruntule();
+
+struct node *headNode;
+
+int main() {
+    int option;
+    while(option != 4){
+    printf("\n\n Hosgeldiniz \n 1) kisi ekleme \n 2) kisiyi isleme alma \n 3) listeyi goruntule \n 4) cikis yap");
+    printf("\n seciminiz : "); 
+    scanf("%d",&option);
+    
+    switch (option){
+        case 1 : kisiEkle(); 
+        break;
+        case 2 : islemeAl(); 
+        break;
+        case 3 : listeyiGoruntule(); 
+        break;
+        case 4 : printf("sistemden cikis yapildi"); 
+        break;
+        default : printf("gecersiz secim, tekrar deneyin");
+    }
+    }
+    return 0;
+}
+
+
+void kisiEkle(){
+    int idNum;
+    int priority;
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    
+    printf("eklemek istediginiz ID :");
+    scanf("%d",&idNum);
+    
+    newNode -> idNum = idNum;
+    
+     priority = idNum % 10;
+     
+    if(priority == 3){
+        basaEkle(newNode);
+    }
+    else if(priority == 2){
+        arayaEkle(newNode);
+    }
+    else {
+        sonaEkle(newNode);
+    }
+
+}
+void islemeAl(){
+    if (headNode != NULL){
+        printf("isleme alinan id : %d", headNode -> idNum);
+        headNode -> nextNode = NULL;
+        headNode = headNode -> nextNode;
+        printf("liste güncellendi");
+    }else {
+        printf("liste bos");
+    }
+    
+}
+void listeyiGoruntule(){
+    struct node *currentNode;
+    currentNode = headNode;
+    printf("\n liste : ");
+    while(currentNode != NULL){
+        printf("%d -> ",currentNode -> idNum);
+        currentNode = currentNode -> nextNode;
+    }
+}
+void basaEkle(struct node *newNode){
+    newNode -> nextNode = headNode;
+    newNode -> prevNode = NULL;
+    if (headNode != NULL) {
+        headNode -> prevNode = newNode;
+    }
+    headNode = newNode;
+    printf("\n listeye eklendi");
+}
+void sonaEkle(struct node *newNode){
+    struct node *currentNode;
+    currentNode = headNode;
+    
+    if (headNode == NULL) {
+        headNode = newNode;
+        newNode -> prevNode = NULL;
+        newNode -> nextNode = NULL;
+        return;
+    }
+    
+    while(currentNode -> nextNode != NULL){
+        currentNode = currentNode -> nextNode;
+    }
+    currentNode -> nextNode = newNode;
+    newNode -> prevNode = currentNode;
+    newNode -> nextNode = NULL;
+    
+    printf("\n listeye eklendi");
+}
+void arayaEkle(struct node *newNode){
+    if(headNode == NULL){
+        basaEkle(newNode);
+        return;
+    }
+    
+    struct node *currentNode;
+    currentNode = headNode;
+    
+    int count = 0;
+    
+    while(count < 2 && currentNode -> nextNode != NULL){
+        currentNode = currentNode -> nextNode;
+        count++;
+    }
+    
+    newNode -> nextNode = currentNode -> nextNode;
+    if (currentNode -> nextNode != NULL) {
+        currentNode -> nextNode -> prevNode = newNode;
+    }
+    currentNode -> nextNode = newNode;
+    newNode -> prevNode = currentNode;
+
+    printf("\n listeye eklendi");
+}
